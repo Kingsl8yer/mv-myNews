@@ -9,3 +9,9 @@ export const fetchArticles =  () => {
         .then((res) => res.data)
         .catch((err) => console.log(err));
 }
+
+export const fetchArticleById = (id) => {
+    return api.get(`/articles/${id}`)
+        .then((res) => res.data)
+        .catch((err) => console.log(err));
+}
