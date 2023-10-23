@@ -1,10 +1,11 @@
-import './App.css'
+import './App.css';
+import ArticlesList from "./components/ArticlesList.jsx";
 
 function App() {
 
   return (
    <div>
-    App
+        <ArticlesList />
    </div>
   )
 }
