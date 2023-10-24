@@ -2,7 +2,7 @@ const Comment = ({ comment }) => {
     return (
         <div className="ui attached segment">
         <div className="ui padded segment">
-            <h4 className="ui header">{comment.author}</h4>
+            <h4 className="ui header">{comment.username}</h4>
             <p>{comment.body}</p>
         </div>
         <button className="ui green basic  button"><i className="thumbs up outline icon"></i>

@@ -13,15 +13,16 @@ const ArticleMain = () => {
   const { article_id } = useParams();
 
   const handleLikes = (value) => {
-    updateArticleVotes(article_id, { inc_votes: value }).then((data) => {
-      console.log(data);
-      setArticle((currArticle) => {
-        setDisable(true);
-        return { ...currArticle, votes: currArticle.votes + value };
-      }).catch((err) => {
+    updateArticleVotes(article_id, { inc_votes: value })
+      .then((data) => {
+        setArticle((currArticle) => {
+          setDisable(true);
+          return { ...currArticle, votes: currArticle.votes + value };
+        });
+      })
+      .catch((err) => {
         setError(true);
       });
-    });
   };
 
   useEffect(() => {
@@ -43,6 +44,7 @@ const ArticleMain = () => {
   const month = myDate.toLocaleString("default", { month: "long" });
   const year = myDate.getFullYear();
   const date = `${day}/${month}/${year}`;
+
   return (
     <div style={{ margin: "auto", width: "50%", paddingBottom: "10px" }}>
       <div className="ui segment">
@@ -65,12 +67,21 @@ const ArticleMain = () => {
           <p>{article.body}</p>
         </div>
       </div>
-      <button className={disable ?  "ui green basic disabled button" :  "ui green basic button"} onClick={() => handleLikes(1)}>
+      <button
+        className={
+          disable ? "ui green basic disabled button" : "ui green basic button"
+        }
+        onClick={() => handleLikes(1)}
+      >
         <i className="thumbs up outline icon"></i>
         {article.votes} likes
       </button>
-      <button className= {disable ?  "ui red basic disabled button" :  "ui red basic button"} 
-      onClick={() => handleLikes(-1)}>
+      <button
+        className={
+          disable ? "ui red basic disabled button" : "ui red basic button"
+        }
+        onClick={() => handleLikes(-1)}
+      >
         <i className="thumbs down outline icon"></i>
       </button>
       <Link
