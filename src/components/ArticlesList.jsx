@@ -1,6 +1,6 @@
-import {fetchArticles} from "../api.js";
+import { fetchArticles } from "../api.js";
 import Articles from "./Articles.jsx";
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 
 const ArticlesList = () => {
   const [articles, setArticles] = useState([]);
@@ -13,12 +13,11 @@ const ArticlesList = () => {
 
   return (
     <div className="ui three stackable link cards">
-        {articles.map((article) => {
-            return <Articles key={article.article_id} article={article} />;
-        }
-        )}
+      {articles.map((article) => {
+        return <Articles key={article.article_id} article={article} />;
+      })}
     </div>
   );
-}
+};
 
 export default ArticlesList;
