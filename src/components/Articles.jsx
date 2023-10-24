@@ -14,7 +14,7 @@ const Articles = ({ article }) => {
         <img src={article.article_img_url} />
       </div>
       <div className="content">
-        <a className="header">{article.title}</a>
+        <header className="header">{article.title}</header>
         <div className="meta">
           <span className="date">{article.topic}</span>
         </div>
