@@ -7,6 +7,7 @@ import Comment from "./Comment";
 const CommentList = ({ username }) => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
+  const [disable, setDisable] = useState(false);
   const { article_id } = useParams();
 
   const handleSubmit = (event) => {
@@ -20,6 +21,11 @@ const CommentList = ({ username }) => {
         return [...currComments, data];
       });
     });
+    setCommentText("");
+    setDisable(true);
+    setTimeout(()=>{
+        setDisable(false);
+    },5000)
   };
 
   useEffect(() => {
@@ -30,7 +36,10 @@ const CommentList = ({ username }) => {
 
   return (
     <div style={{ margin: "auto", width: "50%", paddingBottom: "10px" }}>
-      <Link to={`/articles/${article_id}`} className="ui labeled basic icon button">
+      <Link
+        to={`/articles/${article_id}`}
+        className="ui labeled basic icon button"
+      >
         <i className="left chevron icon"></i>
         Back
       </Link>
@@ -38,16 +47,20 @@ const CommentList = ({ username }) => {
       {comments.map((comment, index) => {
         return <Comment key={index} comment={comment} />;
       })}
-      <form className="ui form" onSubmit={handleSubmit}>
-        <div className="field">
+      <form className={disable ? "ui form success" : "ui form"} onSubmit={handleSubmit}>
+        <div className={disable ? "disabled field" : "field"}>
           <label>New Comment</label>
           <textarea
-            rows="2"
+            rows="3"
             value={commentText}
             onChange={(event) => {
               setCommentText(event.target.value);
             }}
           />
+        </div>
+        <div className="ui success message">
+          <div className="header">Comment Submitted</div>
+          <p>Thank you, {username}! Just wait a fe seconds before commenting again please</p>
         </div>
         <button className="ui button blue" type="submit">
           Submit
