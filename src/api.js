@@ -30,3 +30,12 @@ export const postCommentByArticleId = (id, comment) => {
         .then((res) => res.data)
         .catch((err) => console.log(err));
 }
+
+export const updateArticleVotes = (id, inc_votes) => {
+    return api.patch(`/articles/${id}`, inc_votes)
+        .then((res) => res.data)
+        .catch((err) => {
+            console.log(err)
+            return err.response.data
+        });
+}

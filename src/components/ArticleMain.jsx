@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchArticleById } from "../api.js";
+import { fetchArticleById, updateArticleVotes } from "../api.js";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import Loading from "./Loading.jsx";
@@ -8,17 +8,35 @@ import PageNotFound from "./PageNotFound.jsx";
 const ArticleMain = () => {
   const [article, setArticle] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [disable, setDisable] = useState(false);
+  const [error, setError] = useState(false);
   const { article_id } = useParams();
 
-  useEffect(() => {
-    fetchArticleById(article_id).then((data) => {
-      setArticle(data.article);
-      setIsLoading(false);
+  const handleLikes = (value) => {
+    updateArticleVotes(article_id, { inc_votes: value }).then((data) => {
+      console.log(data);
+      setArticle((currArticle) => {
+        setDisable(true);
+        return { ...currArticle, votes: currArticle.votes + value };
+      }).catch((err) => {
+        setError(true);
+      });
     });
+  };
+
+  useEffect(() => {
+    fetchArticleById(article_id)
+      .then((data) => {
+        setArticle(data.article);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setError(true);
+      });
   }, [article_id]);
 
   if (isLoading) return <Loading />;
-  if (!article) return <PageNotFound />;
+  if (error) return <PageNotFound />;
 
   const myDate = new Date(article.created_at);
   const day = myDate.getDate();
@@ -47,11 +65,12 @@ const ArticleMain = () => {
           <p>{article.body}</p>
         </div>
       </div>
-      <button className="ui green basic button">
+      <button className={disable ?  "ui green basic disabled button" :  "ui green basic button"} onClick={() => handleLikes(1)}>
         <i className="thumbs up outline icon"></i>
         {article.votes} likes
       </button>
-      <button className="ui red basic button">
+      <button className= {disable ?  "ui red basic disabled button" :  "ui red basic button"} 
+      onClick={() => handleLikes(-1)}>
         <i className="thumbs down outline icon"></i>
       </button>
       <Link
