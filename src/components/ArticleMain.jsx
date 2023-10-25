@@ -108,7 +108,7 @@ const ArticleMain = ({username}) => {
       )}
       {disable ? (
         <div className="ui green message">
-          Thank you for voting! <i className="hand peace outline icon"></i>
+          Thanks for your feedback, {username}! <i className="hand peace outline icon"></i>
         </div>
       ) : (
         <></>

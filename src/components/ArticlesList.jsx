@@ -12,7 +12,6 @@ const ArticlesList = () => {
 
   useEffect(() => {
       fetchArticles(filterByTopic).then((data) => {
-        console.log(data.articles);
       setArticles(data.articles);
       setIsLoading(false);
     });
