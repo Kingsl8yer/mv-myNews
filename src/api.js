@@ -4,8 +4,12 @@ const api = axios.create({
     baseURL: "https://mv-news.onrender.com/api",
 });
 
-export const fetchArticles =  () => {
-    return api.get("/articles")
+export const fetchArticles =  (topic) => {
+    let URL = "/articles";
+    if(topic){
+        URL+= `?topic=${topic}`;
+    }
+    return api.get(URL)
         .then((res) => res.data)
 }
 
@@ -26,5 +30,10 @@ export const postCommentByArticleId = (id, comment) => {
 
 export const updateArticleVotes = (id, inc_votes) => {
     return api.patch(`/articles/${id}`, inc_votes)
+        .then((res) => res.data)
+}
+
+export const fetchTopics = () => {
+    return api.get("/topics")
         .then((res) => res.data)
 }

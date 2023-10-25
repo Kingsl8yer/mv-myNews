@@ -15,8 +15,7 @@ function App() {
       <Routes>
           <Route path="/"  element={<ArticlesList />} />
           <Route path="/articles"  element={<ArticlesList />} />
-          <Route path="/articles/:article_id" element={<ArticleMain />} />
-          <Route path="/articles/:article_id/comments" element={<CommentList username={user}/>} />
+          <Route path="/articles/:article_id" element={<ArticleMain username={user}/>} />
           <Route path="*"  element={<PageNotFound />} />
       </Routes>
     </div>

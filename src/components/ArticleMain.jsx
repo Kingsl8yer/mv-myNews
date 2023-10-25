@@ -1,17 +1,19 @@
 import { useState, useEffect } from "react";
 import { fetchArticleById, updateArticleVotes } from "../api.js";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Loading from "./Loading.jsx";
 import PageNotFound from "./PageNotFound.jsx";
+import CommentList from "./CommentList.jsx";
 
-const ArticleMain = () => {
+const ArticleMain = ({username}) => {
   const [article, setArticle] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [disable, setDisable] = useState(false);
   const [errorPageId, setErrorPageId] = useState(false);
   const [errorArticleVotes, setErrorArticleVotes] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const { article_id } = useParams();
+
 
   const handleLikes = (value) => {
     updateArticleVotes(article_id, { inc_votes: value })
@@ -73,7 +75,7 @@ const ArticleMain = () => {
         <a className="ui basic label">{article.votes} likes</a>
         <div
           className={
-            disable ? "ui basic green disabled button" : "ui basic green button"
+            disable ? "ui green disabled button" : "ui basic green button"
           }
           onClick={() => handleLikes(1)}
         >
@@ -82,19 +84,19 @@ const ArticleMain = () => {
       </div>
       <div
         className={
-          disable ? "ui basic red disabled button" : "ui basic red button"
+          disable ? "ui red disabled button" : "ui basic red button"
         }
         onClick={() => handleLikes(-1)}
       >
         <i className="thumbs down outline icon"></i>
       </div>
-      <Link
-        to={`/articles/${article_id}/comments`}
-        className="ui blue basic button"
+      <button className={showComments ? "ui blue button" : "ui blue basic button"} 
+      value={showComments}
+      onClick={()=>{setShowComments(!showComments)}}
       >
         <i className="comment outline icon"></i>
         {article.comment_count} comments
-      </Link>
+      </button>
       {errorArticleVotes ? (
         <div className="ui negative message">
           <i className="bug icon"></i>
@@ -106,11 +108,12 @@ const ArticleMain = () => {
       )}
       {disable ? (
         <div className="ui green message">
-          Thank you for voting! <i className="hand peace outline icon"></i>
+          Thanks for your feedback, {username}! <i className="hand peace outline icon"></i>
         </div>
       ) : (
         <></>
       )}
+      {showComments ? <CommentList username={username}/> : <></>}
     </div>
   );
 };
