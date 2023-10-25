@@ -4,12 +4,14 @@ const api = axios.create({
     baseURL: "https://mv-news.onrender.com/api",
 });
 
-export const fetchArticles =  (topic) => {
-    let URL = "/articles";
-    if(topic){
-        URL+= `?topic=${topic}`;
-    }
-    return api.get(URL)
+export const fetchArticles =  (filterByTopic, sortBy, order) => {
+    return api.get('/articles',{
+        params:{
+            topic: filterByTopic,
+            sort_by: sortBy,
+            order: order
+        }
+    })
         .then((res) => res.data)
 }
 

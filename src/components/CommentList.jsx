@@ -17,7 +17,7 @@ const CommentList = ({ username }) => {
     };
     postCommentByArticleId(article_id, comment).then((data) => {
       setComments((currComments) => {
-        return [...currComments, data];
+        return [data, ...currComments];
       });
     });
     setCommentText("");
