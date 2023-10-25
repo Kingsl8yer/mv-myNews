@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchCommentsByArticleId, postCommentByArticleId } from "../api";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Comment from "./Comment";
 
 const CommentList = ({ username }) => {
@@ -23,9 +22,9 @@ const CommentList = ({ username }) => {
     });
     setCommentText("");
     setDisable(true);
-    setTimeout(()=>{
-        setDisable(false);
-    },5000)
+    setTimeout(() => {
+      setDisable(false);
+    }, 5000);
   };
 
   useEffect(() => {
@@ -35,21 +34,13 @@ const CommentList = ({ username }) => {
   }, [article_id]);
 
   return (
-    <div style={{ margin: "auto", width: "50%", paddingBottom: "10px" }}>
-      <Link
-        to={`/articles/${article_id}`}
-        className="ui labeled basic icon button"
+    <div style={{ margin: "auto", padding: "10px" }}>
+      <form
+        className={disable ? "ui form success" : "ui form"}
+        onSubmit={handleSubmit}
       >
-        <i className="left chevron icon"></i>
-        Back
-      </Link>
-      <h3>Comments</h3>
-      {comments.map((comment, index) => {
-        return <Comment key={index} comment={comment} />;
-      })}
-      <form className={disable ? "ui form success" : "ui form"} onSubmit={handleSubmit}>
         <div className={disable ? "disabled field" : "field"}>
-          <label>New Comment</label>
+          <label>New Comment:</label>
           <textarea
             rows="3"
             value={commentText}
@@ -60,12 +51,19 @@ const CommentList = ({ username }) => {
         </div>
         <div className="ui success message">
           <div className="header">Comment Submitted</div>
-          <p>Thank you, {username}! Just wait a fe seconds before commenting again please</p>
+          <p>
+            Thank you, {username}! Just wait a fe seconds before commenting
+            again please
+          </p>
         </div>
         <button className="ui button blue" type="submit">
           Submit
         </button>
       </form>
+      <h3>Comments:</h3>
+      {comments.map((comment, index) => {
+        return <Comment key={index} comment={comment} />;
+      })}
     </div>
   );
 };
