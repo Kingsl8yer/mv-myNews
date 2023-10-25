@@ -9,7 +9,8 @@ const ArticleMain = () => {
   const [article, setArticle] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [disable, setDisable] = useState(false);
-  const [error, setError] = useState(false);
+  const [errorPageId, setErrorPageId] = useState(false);
+  const [errorArticleVotes, setErrorArticleVotes] = useState(false);
   const { article_id } = useParams();
 
   const handleLikes = (value) => {
@@ -21,7 +22,7 @@ const ArticleMain = () => {
         });
       })
       .catch((err) => {
-        setError(true);
+        setErrorArticleVotes(true);
       });
   };
 
@@ -32,12 +33,13 @@ const ArticleMain = () => {
         setIsLoading(false);
       })
       .catch((err) => {
-        setError(true);
+        setErrorPageId(true);
+        setIsLoading(false);
       });
   }, [article_id]);
 
   if (isLoading) return <Loading />;
-  if (error) return <PageNotFound />;
+  if (errorPageId) return <PageNotFound />;
 
   const myDate = new Date(article.created_at);
   const day = myDate.getDate();
@@ -67,23 +69,25 @@ const ArticleMain = () => {
           <p>{article.body}</p>
         </div>
       </div>
-      <button
+      <div className="ui green left labeled button">
+        <a className="ui basic label">{article.votes} likes</a>
+        <div
+          className={
+            disable ? "ui basic green disabled button" : "ui basic green button"
+          }
+          onClick={() => handleLikes(1)}
+        >
+          <i className="thumbs up outline icon"></i>
+        </div>
+      </div>
+      <div
         className={
-          disable ? "ui green basic disabled button" : "ui green basic button"
-        }
-        onClick={() => handleLikes(1)}
-      >
-        <i className="thumbs up outline icon"></i>
-        {article.votes} likes
-      </button>
-      <button
-        className={
-          disable ? "ui red basic disabled button" : "ui red basic button"
+          disable ? "ui basic red disabled button" : "ui basic red button"
         }
         onClick={() => handleLikes(-1)}
       >
         <i className="thumbs down outline icon"></i>
-      </button>
+      </div>
       <Link
         to={`/articles/${article_id}/comments`}
         className="ui blue basic button"
@@ -91,6 +95,22 @@ const ArticleMain = () => {
         <i className="comment outline icon"></i>
         {article.comment_count} comments
       </Link>
+      {errorArticleVotes ? (
+        <div className="ui negative message">
+          <i className="bug icon"></i>
+          <div className="header">Something went wrong</div>
+          <p>Please refresh the page!</p>
+        </div>
+      ) : (
+        <></>
+      )}
+      {disable ? (
+        <div className="ui green message">
+          Thank you for voting! <i className="hand peace outline icon"></i>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 };

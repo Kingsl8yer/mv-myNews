@@ -7,6 +7,9 @@ const Loading = () => {
       <p></p>
       <p></p>
       <p></p>
+      <p></p>
+      <p></p>
+      <p></p>
     </div>
   );
 };
