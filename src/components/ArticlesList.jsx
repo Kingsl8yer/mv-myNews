@@ -3,12 +3,12 @@ import Articles from "./Articles.jsx";
 import { useState, useEffect } from "react";
 import Loading from "./Loading.jsx";
 import { useSearchParams } from "react-router-dom";
+import ArticleOrder from "./ArticlesOrder.jsx";
+import SortByArticles from "./SortByArticles.jsx";
 
 const ArticlesList = () => {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [sortAttributes, setSortAttributes] = useState([]);
-  const [order, setOrder] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
   const filterByTopic = searchParams.get("topic");
   const sortBy = searchParams.get("sort_by");
@@ -31,7 +31,6 @@ const ArticlesList = () => {
   useEffect(() => {
     fetchArticles(filterByTopic, sortBy, orderBy).then((data) => {
       setArticles(data.articles);
-      setSortAttributes(["created_at", "votes", "comment_count"]);
       setIsLoading(false);
     });
   }, [filterByTopic, sortBy, orderBy]);
@@ -45,37 +44,9 @@ const ArticlesList = () => {
           <div className="ui right dropdown item">
             <div className="text">Sort By</div>
             <i className="dropdown icon"></i>
-            <div className="menu">
-              {sortAttributes.map((sortAttribute, index) => {
-                return (
-                  <div
-                    className="item"
-                    key={index}
-                    onClick={() => {
-                      setSortByParams(sortAttribute);
-                    }}
-                  >
-                    {sortAttribute === "created_at"
-                      ? "Date (default)"
-                      : sortAttribute === "votes"
-                      ? "Votes"
-                      : "Comments"}
-                  </div>
-                );
-              })}
-            </div>
+            <SortByArticles setSortByParamsFunc={setSortByParams} />
           </div>
-          <div className="item">
-            <i
-              className={
-                order ? "sort amount down icon" : "sort amount up icon"
-              }
-              onClick={() => {
-                setOrder(!order);
-                setOrderParams(order ? "asc" : "desc");
-              }}
-            ></i>
-          </div>
+          <ArticleOrder setOrderParamsFunc={setOrderParams} />
         </div>
       </div>
 
