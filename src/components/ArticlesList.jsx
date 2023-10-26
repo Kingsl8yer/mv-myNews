@@ -69,7 +69,7 @@ const ArticlesList = () => {
               }
               onClick={() => {
                 setOrder(!order);
-                setOrderParams(order ? "desc" : "asc");
+                setOrderParams(order ? "asc" : "desc");
               }}
             ></i>
             
