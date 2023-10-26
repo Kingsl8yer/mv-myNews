@@ -6,6 +6,8 @@ import {
 } from "../api";
 import { useParams } from "react-router-dom";
 import Comment from "./Comment";
+import Modal from "./Modal";
+import SuccessMessage from "./SuccessMessage";
 
 const CommentList = ({ username }) => {
   const [comments, setComments] = useState([]);
@@ -46,8 +48,8 @@ const CommentList = ({ username }) => {
     $(".small.modal").modal("show");
     setTimeout(() => {
       $(".small.modal").modal("hide");
-    }, 2000);
-  };
+    }, 4000);
+   };
 
   useEffect(() => {
     fetchCommentsByArticleId(article_id).then((data) => {
@@ -71,24 +73,12 @@ const CommentList = ({ username }) => {
             }}
           />
         </div>
-        <div className="ui success message">
-          <div className="header">Comment Submitted</div>
-          <p>
-            Thank you, {username}! Just wait a fe seconds before commenting
-            again please
-          </p>
-        </div>
+        <SuccessMessage name={username}/>
         <button className="ui button blue" type="submit">
           Submit
         </button>
       </form>
-      <div className="ui small modal">
-        <div className="ui success message">
-          <i className="close icon"></i>
-          <div className="header">{username}</div>
-          <p> Your comment has been deleted successfully!</p>
-        </div>
-      </div>
+      <Modal name={username} body={"Your comment has been deleted successfully!"}/>
       <h3>Comments:</h3>
       {comments.map((comment, index) => {
         return (

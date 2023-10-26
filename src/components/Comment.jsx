@@ -1,33 +1,31 @@
-const Comment = ({ comment, username, deleteButton, handleDelete }) => {
-    return (
-    <div className="ui  segment">
-      <h3 className="ui right aligned disabled header">
+import CommentButtons from "./CommentButtons";
+
+const Comment = ({ comment, deleteButton, handleDelete }) => {
+  const myDate = new Date(comment.created_at);
+  const day = myDate.getDate();
+  const month = myDate.toLocaleString("default", { month: "long" });
+  const year = myDate.getFullYear();
+  const date = `${day}/${month}/${year}`;
+  return (
+    <div className="ui raised segment">
+      <div className="ui padded  segment">
+        <h4 className="ui left floated header">
+          <i className="user circle icon"></i>
+          <div className="content">
+            {comment.author}<div className="sub header">{date}</div>
+          </div>
+        </h4>
+        <h3 className="ui right floated disabled header">
         #{comment.comment_id}
       </h3>
-      <div className="ui padded raised segment">
-        <h4 className="ui header">
-          <i className="user circle icon"></i>
-          {comment.author}:
-        </h4>
+      <div className="ui clearing divider"></div>
         <p>{comment.body}</p>
       </div>
-      <button className="ui green basic  button">
-        <i className="thumbs up outline icon"></i>
-        {comment.votes} likes
-      </button>
-      <button className="ui red basic  button">
-        <i className="thumbs down outline icon"></i>
-      </button>
-      {deleteButton ? (
-                <button className="ui red right floated button"
-                onClick={()=>{handleDelete(comment.comment_id)}}
-                >
-                    <i className="trash alternate outline icon"></i>
-                    Delete
-                </button>
-            ) : (
-                <></>
-            )}
+      <CommentButtons
+        comment={comment}
+        deleteButton={deleteButton}
+        handleDelete={handleDelete}
+      />
     </div>
   );
 };

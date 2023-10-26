@@ -25,11 +25,10 @@ const ArticlesList = () => {
     newParams.set("sort_by", sortBy);
     setSearchParams(newParams);
   };
-  $(document).ready(function() {
-    $('.ui.dropdown').dropdown();
+  $(document).ready(function () {
+    $(".ui.dropdown").dropdown();
   });
   useEffect(() => {
-    
     fetchArticles(filterByTopic, sortBy, orderBy).then((data) => {
       setArticles(data.articles);
       setSortAttributes(["created_at", "votes", "comment_count"]);
@@ -56,7 +55,11 @@ const ArticlesList = () => {
                       setSortByParams(sortAttribute);
                     }}
                   >
-                    {sortAttribute === "created_at" ? "Date (default)" : sortAttribute === "votes" ? "Votes" : "Comments"}
+                    {sortAttribute === "created_at"
+                      ? "Date (default)"
+                      : sortAttribute === "votes"
+                      ? "Votes"
+                      : "Comments"}
                   </div>
                 );
               })}
@@ -72,13 +75,10 @@ const ArticlesList = () => {
                 setOrderParams(order ? "asc" : "desc");
               }}
             ></i>
-            
           </div>
-          
         </div>
-        
       </div>
-      
+
       <div className="ui three stackable link cards">
         {articles.map((article) => {
           return <Articles key={article.article_id} article={article} />;
