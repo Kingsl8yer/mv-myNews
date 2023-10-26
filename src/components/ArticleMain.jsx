@@ -63,7 +63,7 @@ const ArticleMain = ({username}) => {
           <i className="user circle outline icon"></i>
           <a className="header">{article.author}</a>
           <div className="meta">
-            <span className="date">Created in: {date}</span>
+            <span className="date">Created on: {date}</span>
           </div>
         </div>
         <div className="ui clearing divider"></div>
