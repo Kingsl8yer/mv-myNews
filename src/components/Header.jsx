@@ -5,13 +5,13 @@ import { fetchTopics } from "../api.js";
 
 const Header = () => {
   const [topics, setTopics] = useState([]);
+  $(document).ready(function () {
+    $(".ui.dropdown").dropdown();
+  });
 
   useEffect(() => {
     fetchTopics().then((topics) => {
       setTopics(topics.topics);
-
-      $(".ui.dropdown").dropdown();
-      
     });
   }, []);
 
@@ -28,7 +28,9 @@ const Header = () => {
           <span className="text">Topics</span>
           <i className="dropdown icon"></i>
           <div className="menu">
-            <Link to={`/articles`} className="item">Topics</Link>
+            <Link to={`/articles`} className="item">
+              Topics
+            </Link>
             {topics.map((topic) => {
               return (
                 <Link
@@ -36,7 +38,11 @@ const Header = () => {
                   className="item"
                   key={topic.slug}
                 >
-                  {topic.slug}
+                  {topic.slug === "coding"
+                    ? "Coding"
+                    : topic.slug === "cooking"
+                    ? "Cooking"
+                    : "Football"}
                 </Link>
               );
             })}
@@ -48,7 +54,10 @@ const Header = () => {
 
         <div className="right menu">
           <a className="item">Users</a>
-          <a className="item">Sign in</a>
+          <a className="item">
+            Sign in
+            <i className="sign in alternate icon"></i>
+          </a>
         </div>
       </div>
     </header>
