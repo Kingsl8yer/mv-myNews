@@ -41,7 +41,7 @@ const ArticleMain = ({username}) => {
   }, [article_id]);
 
   if (isLoading) return <Loading />;
-  if (errorPageId) return <PageNotFound />;
+  if (errorPageId) return <PageNotFound type={'articles'} />;
 
   const myDate = new Date(article.created_at);
   const day = myDate.getDate();

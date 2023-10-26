@@ -1,10 +1,9 @@
-const SuccessMessage = ({name}) => {
+const SuccessMessage = ({body, successful, headerMessage}) => {
     return (
-        <div className="ui success message">
-          <div className="header">Comment Submitted</div>
+        <div className={successful ? "ui success message" : "ui error message"}>
+          <div className="header">{headerMessage}</div>
           <p>
-            Thank you, {name}! Just wait a fe seconds before commenting
-            again please
+            {body}
           </p>
         </div>
     )

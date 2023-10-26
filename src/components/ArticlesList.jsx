@@ -5,11 +5,13 @@ import Loading from "./Loading.jsx";
 import { useSearchParams } from "react-router-dom";
 import ArticleOrder from "./ArticlesOrder.jsx";
 import SortByArticles from "./SortByArticles.jsx";
+import PageNotFound from "./PageNotFound.jsx";
 
 const ArticlesList = () => {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [errorTopic, setErrorTopic] = useState(false);
   const filterByTopic = searchParams.get("topic");
   const sortBy = searchParams.get("sort_by");
   const orderBy = searchParams.get("order");
@@ -32,10 +34,15 @@ const ArticlesList = () => {
     fetchArticles(filterByTopic, sortBy, orderBy).then((data) => {
       setArticles(data.articles);
       setIsLoading(false);
+      setErrorTopic(false);
+    }).catch((err) => {
+      setErrorTopic(true);
+      setIsLoading(false);
     });
   }, [filterByTopic, sortBy, orderBy]);
 
   if (isLoading) return <Loading />;
+  if (errorTopic) return <PageNotFound type={'topics'} />;
 
   return (
     <>

@@ -4,7 +4,6 @@ import { useState } from "react";
 import ArticlesList from "./components/ArticlesList.jsx";
 import Header from "./components/Header";
 import ArticleMain from "./components/ArticleMain";
-import CommentList from "./components/CommentList";
 import PageNotFound from "./components/PageNotFound";
 
 function App() {

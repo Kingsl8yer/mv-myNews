@@ -1,12 +1,13 @@
-const PageNotFound = () => {
+import { Link } from "react-router-dom";
+const PageNotFound = ({type}) => {
   return (
     <div className="ui placeholder segment">
       <div className="ui icon header">
         <i className="search icon"></i>
-        We don't have any news matching your query
+        We don't have any {type} matching your query
       </div>
       <div className="inline">
-        <div className="ui primary button">Home</div>
+        <Link to={'/'} className="ui primary button">Home</Link>
       </div>
     </div>
   );
