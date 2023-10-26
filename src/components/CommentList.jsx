@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
-import { fetchCommentsByArticleId, postCommentByArticleId } from "../api";
+import {
+  fetchCommentsByArticleId,
+  postCommentByArticleId,
+  deleteCommentById,
+} from "../api";
 import { useParams } from "react-router-dom";
 import Comment from "./Comment";
+import Modal from "./Modal";
+import SuccessMessage from "./SuccessMessage";
 
 const CommentList = ({ username }) => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [disable, setDisable] = useState(false);
   const { article_id } = useParams();
+
+  $(".message .close").on("click", function () {
+    $(this).closest(".message").transition("fade");
+  });
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -24,8 +34,22 @@ const CommentList = ({ username }) => {
     setDisable(true);
     setTimeout(() => {
       setDisable(false);
-    }, 5000);
+    }, 3000);
   };
+
+  const handleDelete = (comment_id) => {
+    deleteCommentById(comment_id).then((data) => {
+      setComments((currComments) => {
+        return currComments.filter((comment) => {
+          return comment.comment_id !== comment_id;
+        });
+      });
+    });
+    $(".small.modal").modal("show");
+    setTimeout(() => {
+      $(".small.modal").modal("hide");
+    }, 4000);
+   };
 
   useEffect(() => {
     fetchCommentsByArticleId(article_id).then((data) => {
@@ -49,20 +73,23 @@ const CommentList = ({ username }) => {
             }}
           />
         </div>
-        <div className="ui success message">
-          <div className="header">Comment Submitted</div>
-          <p>
-            Thank you, {username}! Just wait a fe seconds before commenting
-            again please
-          </p>
-        </div>
+        <SuccessMessage name={username}/>
         <button className="ui button blue" type="submit">
           Submit
         </button>
       </form>
+      <Modal name={username} body={"Your comment has been deleted successfully!"}/>
       <h3>Comments:</h3>
       {comments.map((comment, index) => {
-        return <Comment key={index} comment={comment} />;
+        return (
+          <Comment
+            key={index}
+            comment={comment}
+            username={username}
+            deleteButton={username === comment.author}
+            handleDelete={handleDelete}
+          />
+        );
       })}
     </div>
   );
