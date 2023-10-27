@@ -7,7 +7,7 @@ const PageNotFound = ({type}) => {
         We don't have any {type} matching your query
       </div>
       <div className="inline">
-        <Link to={'/'} className="ui primary button">Home</Link>
+        <Link to={'/'} className="ui black button">Home</Link>
       </div>
     </div>
   );

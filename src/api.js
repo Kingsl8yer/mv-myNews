@@ -31,7 +31,7 @@ export const postCommentByArticleId = (id, comment) => {
 }
 
 export const updateArticleVotes = (id, inc_votes) => {
-    return api.patch(`/articles/${id}`, inc_votes)
+    return api.patch(`/article/${id}`, inc_votes)
         .then((res) => res.data)
 }
 

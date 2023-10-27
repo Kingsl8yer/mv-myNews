@@ -4,8 +4,9 @@ import { useParams } from "react-router-dom";
 import Loading from "./Loading.jsx";
 import PageNotFound from "./PageNotFound.jsx";
 import CommentList from "./CommentList.jsx";
+import SuccessMessage from "./SuccessMessage.jsx";
 
-const ArticleMain = ({username}) => {
+const ArticleMain = ({ username }) => {
   const [article, setArticle] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [disable, setDisable] = useState(false);
@@ -14,11 +15,12 @@ const ArticleMain = ({username}) => {
   const [showComments, setShowComments] = useState(false);
   const { article_id } = useParams();
 
-
   const handleLikes = (value) => {
     updateArticleVotes(article_id, { inc_votes: value })
       .then((data) => {
         setArticle((currArticle) => {
+          setErrorArticleVotes(false);
+          setIsLoading(false);
           setDisable(true);
           return { ...currArticle, votes: currArticle.votes + value };
         });
@@ -31,6 +33,7 @@ const ArticleMain = ({username}) => {
   useEffect(() => {
     fetchArticleById(article_id)
       .then((data) => {
+        setErrorArticleVotes(false);
         setArticle(data.article);
         setIsLoading(false);
       })
@@ -41,7 +44,7 @@ const ArticleMain = ({username}) => {
   }, [article_id]);
 
   if (isLoading) return <Loading />;
-  if (errorPageId) return <PageNotFound type={'articles'} />;
+  if (errorPageId) return <PageNotFound type={"articles"} />;
 
   const myDate = new Date(article.created_at);
   const day = myDate.getDate();
@@ -71,6 +74,16 @@ const ArticleMain = ({username}) => {
           <p>{article.body}</p>
         </div>
       </div>
+      {errorArticleVotes ? (
+        <SuccessMessage
+          name={username}
+          successful={false}
+          headerMessage={"We couldn't update the votes!"}
+          body={`Sorry ${username}, an error occurred while updating the votes. Please try again later."`}
+        />
+      ) : (
+        <></>
+      )}
       <div className="ui green left labeled button">
         <a className="ui basic label">{article.votes} likes</a>
         <div
@@ -83,37 +96,30 @@ const ArticleMain = ({username}) => {
         </div>
       </div>
       <div
-        className={
-          disable ? "ui red disabled button" : "ui basic red button"
-        }
+        className={disable ? "ui red disabled button" : "ui basic red button"}
         onClick={() => handleLikes(-1)}
       >
         <i className="thumbs down outline icon"></i>
       </div>
-      <button className={showComments ? "ui blue button" : "ui blue basic button"} 
-      value={showComments}
-      onClick={()=>{setShowComments(!showComments)}}
+      <button
+        className={showComments ? "ui blue button" : "ui blue basic button"}
+        value={showComments}
+        onClick={() => {
+          setShowComments(!showComments);
+        }}
       >
         <i className="comment outline icon"></i>
         {article.comment_count} comments
       </button>
-      {errorArticleVotes ? (
-        <div className="ui negative message">
-          <i className="bug icon"></i>
-          <div className="header">Something went wrong</div>
-          <p>Please refresh the page!</p>
-        </div>
-      ) : (
-        <></>
-      )}
       {disable ? (
         <div className="ui green message">
-          Thanks for your feedback, {username}! <i className="hand peace outline icon"></i>
+          Thanks for your feedback, {username}!{" "}
+          <i className="hand peace outline icon"></i>
         </div>
       ) : (
         <></>
       )}
-      {showComments ? <CommentList username={username}/> : <></>}
+      {showComments ? <CommentList username={username} /> : <></>}
     </div>
   );
 };

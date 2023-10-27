@@ -14,10 +14,12 @@ const CommentList = ({ username }) => {
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [errorComment, setErrorComment] = useState(false);
+  const [errorCommentPost, setErrorCommentPost] = useState(false);
+  const [errorCommentDelete, setErrorCommentDelete] = useState(false);
+  const [errorCommentFetch, setErrorCommentFetch] = useState(false);
   const [disable, setDisable] = useState(false);
   const { article_id } = useParams();
-  
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const comment = {
@@ -26,56 +28,87 @@ const CommentList = ({ username }) => {
     };
     postCommentByArticleId(article_id, comment)
       .then((data) => {
+        setErrorCommentPost(false);
+        setErrorCommentDelete(false);
+        setErrorCommentFetch(false);
+        setIsLoading(false);
         setComments((currComments) => {
           return [data, ...currComments];
         });
       })
-      .catch((err) => {
-        setErrorComment(true);
-        setIsLoading(false);
-      })
       .then(() => {
         setCommentText("");
-        if (!errorComment) {
+        if (!errorCommentPost) {
           setDisable(true);
         }
         setTimeout(() => {
-          setErrorComment(false);
+          setErrorCommentPost(false);
           setDisable(false);
         }, 3000);
+      })
+      .catch((err) => {
+        setErrorCommentDelete(true);
+        setIsLoading(false);
       });
   };
 
   const handleDelete = (comment_id) => {
-    deleteCommentById(comment_id).then((data) => {
-      setComments((currComments) => {
-        return currComments.filter((comment) => {
-          return comment.comment_id !== comment_id;
+    deleteCommentById(comment_id)
+      .then((data) => {
+        setErrorCommentPost(false);
+        setErrorCommentDelete(false);
+        setErrorCommentFetch(false);
+        setIsLoading(false);
+        setComments((currComments) => {
+          return currComments.filter((comment) => {
+            return comment.comment_id !== comment_id;
+          });
         });
+      })
+      .then(() => {
+        $(".small.modal").modal("show");
+
+        setTimeout(() => {
+          $(".small.modal").modal("hide");
+        }, 2500);
+      })
+      .catch((err) => {
+        setErrorCommentDelete(true);
+        setIsLoading(false);
       });
-    });
-    $(".small.modal").modal("show");
-    
-    setTimeout(() => {
-      $(".small.modal").modal("hide");
-    }, 2500);
   };
 
   useEffect(() => {
-    fetchCommentsByArticleId(article_id).then((data) => {
-      setComments(data.comments);
-      setErrorComment(false);
-      setIsLoading(false);
-    });
+    fetchCommentsByArticleId(article_id)
+      .then((data) => {
+        setComments(data.comments);
+        setErrorCommentPost(false);
+        setErrorCommentDelete(false);
+        setErrorCommentFetch(false);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setErrorCommentFetch(true);
+        setIsLoading(false);
+      });
   }, [article_id]);
 
   if (isLoading) return <Loading />;
+  if (errorCommentFetch)
+    return (
+      <SuccessMessage
+        name={username}
+        successful={false}
+        headerMessage={"We couldn't load the comments!"}
+        body={`Sorry ${username}, an error occurred while loading the comments. Please try again later."`}
+      />
+    );
 
   return (
     <div style={{ margin: "auto", padding: "10px" }}>
       <form
         className={
-          errorComment
+          errorCommentPost
             ? "ui form error"
             : disable
             ? "ui form success"
@@ -83,7 +116,9 @@ const CommentList = ({ username }) => {
         }
         onSubmit={handleSubmit}
       >
-        <div className={disable||errorComment ? "disabled field" : "field"}>
+        <div
+          className={disable || errorCommentPost ? "disabled field" : "field"}
+        >
           <label>New Comment:</label>
           <textarea
             rows="3"
@@ -98,7 +133,7 @@ const CommentList = ({ username }) => {
           name={username}
           successful={false}
           headerMessage={"Comment failed!"}
-          body={`Sorry ${username}, some data was missing!`}
+          body={`Sorry ${username}, an error occurred while inserting your comment. Please try again later."`}
         />
 
         <SuccessMessage
@@ -108,6 +143,7 @@ const CommentList = ({ username }) => {
           body={`Thank you, ${username}! Just wait a fe seconds before commenting
         again please!`}
         />
+
         <button className="ui button blue" type="submit">
           Submit
         </button>
@@ -117,6 +153,16 @@ const CommentList = ({ username }) => {
         body={"Your comment has been deleted successfully!"}
       />
       <h3>Comments:</h3>
+      {errorCommentDelete ? (
+        <SuccessMessage
+          name={username}
+          successful={false}
+          headerMessage={"Delete comment failed!"}
+          body={`Sorry ${username}, an error occurred while deleting your comment. Please try again later."`}
+        />
+      ) : (
+        <></>
+      )}
       {comments.map((comment, index) => {
         return (
           <Comment

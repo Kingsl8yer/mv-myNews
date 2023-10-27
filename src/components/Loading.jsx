@@ -1,12 +1,9 @@
 const Loading = () => {
   return (
     <div className="ui segment">
-      <div className="ui active inverted dimmer">
-        <div className="ui large text loader">Loading</div>
+      <div className="ui active  dimmer">
+        <div className="ui  massive text loader">Loading</div>
       </div>
-      <p></p>
-      <p></p>
-      <p></p>
       <p></p>
       <p></p>
       <p></p>
