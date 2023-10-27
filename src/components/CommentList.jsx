@@ -97,7 +97,6 @@ const CommentList = ({ username }) => {
   if (errorCommentFetch)
     return (
       <SuccessMessage
-        name={username}
         successful={false}
         headerMessage={"We couldn't load the comments!"}
         body={`Sorry ${username}, an error occurred while loading the comments. Please try again later."`}
@@ -130,14 +129,12 @@ const CommentList = ({ username }) => {
         </div>
 
         <SuccessMessage
-          name={username}
           successful={false}
           headerMessage={"Comment failed!"}
           body={`Sorry ${username}, an error occurred while inserting your comment. Please try again later."`}
         />
 
         <SuccessMessage
-          name={username}
           successful={true}
           headerMessage={"Comment Submitted"}
           body={`Thank you, ${username}! Just wait a fe seconds before commenting
@@ -155,7 +152,6 @@ const CommentList = ({ username }) => {
       <h3>Comments:</h3>
       {errorCommentDelete ? (
         <SuccessMessage
-          name={username}
           successful={false}
           headerMessage={"Delete comment failed!"}
           body={`Sorry ${username}, an error occurred while deleting your comment. Please try again later."`}

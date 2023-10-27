@@ -76,7 +76,6 @@ const ArticleMain = ({ username }) => {
       </div>
       {errorArticleVotes ? (
         <SuccessMessage
-          name={username}
           successful={false}
           headerMessage={"We couldn't update the votes!"}
           body={`Sorry ${username}, an error occurred while updating the votes. Please try again later."`}

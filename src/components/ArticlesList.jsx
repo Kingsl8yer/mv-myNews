@@ -57,7 +57,6 @@ const ArticlesList = () => {
   if (errorFetchArticles)
     return (
       <SuccessMessage
-        name={""}
         successful={false}
         headerMessage={"We couldn't update the votes!"}
         body={`Sorry , an error occurred while loading the articles. Please try again later."`}

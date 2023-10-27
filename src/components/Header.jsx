@@ -71,7 +71,6 @@ const Header = () => {
       </div>
       {errorFetchTopics ? (
         <SuccessMessage
-          name={""}
           successful={false}
           headerMessage={"We couldn't load the topics!"}
           body={`Sorry , an error occurred while loading the topics. Please try again later."`}
