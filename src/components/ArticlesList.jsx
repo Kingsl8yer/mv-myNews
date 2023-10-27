@@ -5,11 +5,15 @@ import Loading from "./Loading.jsx";
 import { useSearchParams } from "react-router-dom";
 import ArticleOrder from "./ArticlesOrder.jsx";
 import SortByArticles from "./SortByArticles.jsx";
+import PageNotFound from "./PageNotFound.jsx";
+import SuccessMessage from "./SuccessMessage.jsx";
 
 const ArticlesList = () => {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [errorTopic, setErrorTopic] = useState(false);
+  const [errorFetchArticles, setErrorFetchArticles] = useState(false);
   const filterByTopic = searchParams.get("topic");
   const sortBy = searchParams.get("sort_by");
   const orderBy = searchParams.get("order");
@@ -25,17 +29,39 @@ const ArticlesList = () => {
     newParams.set("sort_by", sortBy);
     setSearchParams(newParams);
   };
-  $(document).ready(function () {
-    $(".ui.dropdown").dropdown();
-  });
+  
   useEffect(() => {
-    fetchArticles(filterByTopic, sortBy, orderBy).then((data) => {
-      setArticles(data.articles);
-      setIsLoading(false);
-    });
+    fetchArticles(filterByTopic, sortBy, orderBy)
+      .then((data) => {
+        setArticles(data.articles);
+        setErrorFetchArticles(false);
+        setIsLoading(false);
+        setErrorTopic(false);
+      }).then(()=>{
+        $(document).ready(function () {
+          $(".ui.dropdown").dropdown();
+        });
+      })
+      .catch((err) => {
+        if (filterByTopic) {
+          setErrorTopic(true);
+        } else {
+          setErrorFetchArticles(true);
+        }
+        setIsLoading(false);
+      });
   }, [filterByTopic, sortBy, orderBy]);
 
   if (isLoading) return <Loading />;
+  if (errorTopic) return <PageNotFound type={"topics"} />;
+  if (errorFetchArticles)
+    return (
+      <SuccessMessage
+        successful={false}
+        headerMessage={"We couldn't update the votes!"}
+        body={`Sorry , an error occurred while loading the articles. Please try again later."`}
+      />
+    );
 
   return (
     <>

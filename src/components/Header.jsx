@@ -2,17 +2,26 @@ import news1 from "../assets/news1.png";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { fetchTopics } from "../api.js";
+import SuccessMessage from "./SuccessMessage";
 
 const Header = () => {
   const [topics, setTopics] = useState([]);
-  $(document).ready(function () {
-    $(".ui.dropdown").dropdown();
-  });
+  const [errorFetchTopics, setErrorFetchTopics] = useState(false);
 
   useEffect(() => {
-    fetchTopics().then((topics) => {
-      setTopics(topics.topics);
-    });
+    fetchTopics()
+      .then((topics) => {
+        setErrorFetchTopics(false);
+        setTopics(topics.topics);
+      })
+      .then(() => {
+        $(document).ready(function () {
+          $(".ui.dropdown").dropdown();
+        });
+      })
+      .catch((err) => {
+        setErrorFetchTopics(true);
+      });
   }, []);
 
   return (
@@ -60,6 +69,15 @@ const Header = () => {
           </a>
         </div>
       </div>
+      {errorFetchTopics ? (
+        <SuccessMessage
+          successful={false}
+          headerMessage={"We couldn't load the topics!"}
+          body={`Sorry , an error occurred while loading the topics. Please try again later."`}
+        />
+      ) : (
+        <></>
+      )}
     </header>
   );
 };
